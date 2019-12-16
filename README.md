@@ -136,6 +136,7 @@ Additional options are available to further customize the `build:project:create`
  | --use-ssh          | The ability to perform the initial git push to the repository provider over SSH instead of HTTPS |
  | --ci               | The CI provider to use. Defaults to "circleci" |
  | --git              | The git repository provider to use. Defaults to "github" |
+ | --site             | The site provider to use. Defaults to "pantheon" |
  | --visibility       | The visibility of the project. Defaults to "public". Use "public" or "private" for GitHub and "public", "private", or "internal" for GitLab |
  | --region           | The region to create the site in. See [the Pantheon regions documentation](https://pantheon.io/docs/regions#create-a-new-site-in-a-specific-region-using-terminus) for details. |
  

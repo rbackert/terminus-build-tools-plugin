@@ -35,7 +35,8 @@ class ProjectCreateCommand extends BuildToolsBase
      */
     public function initOptionValues(InputInterface $input, AnnotationData $annotationData)
     {
-        $git_provider_class_or_alias = $input->getOption('git');
+		$git_provider_class_or_alias = $input->getOption('git');
+		$site_provider_class_or_alias = $input->getOption( 'site' );
         $target_org = $input->getOption('org');
         $site_name = $input->getOption('pantheon-site');
         $source = $input->getArgument('source');
@@ -50,7 +51,7 @@ class ProjectCreateCommand extends BuildToolsBase
         $this->createProviders(
             $git_provider_class_or_alias,
             $ci_provider_class_or_alias,
-            'pantheon'
+            $site_provider_class_or_alias
         );
 
         // If only one parameter was provided, then it is the TARGET
@@ -213,7 +214,8 @@ class ProjectCreateCommand extends BuildToolsBase
             'keep' => false,
             'use-ssh' => false,
             'ci' => '',
-            'git' => 'github',
+			'git' => 'github',
+			'site' => 'pantheon',
             'visibility' => 'public',
             'region' => '',
         ])
