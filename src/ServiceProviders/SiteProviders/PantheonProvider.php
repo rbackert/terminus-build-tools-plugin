@@ -210,5 +210,34 @@ class PantheonProvider implements SiteProvider, CredentialClientInterface, Publi
     {
         // Add the public key to Pantheon.
         $this->session()->getUser()->getSSHKeys()->addKey($publicKey);
-    }
+	}
+	
+	public function createSite( array $state, array $options ) {
+		extract( $options );
+		// Look up our upstream.
+		$upstream = autodetectUpstream($siteDir);
+
+		log()->notice('About to create Pantheon site {site} in {team} with upstream {upstream}', ['site' => $site_name, 'team' => $team, 'upstream' => $upstream]);
+
+		$site = siteCreate($site_name, $label, $upstream, ['org' => $team, 'region' => $region]);
+
+		$siteInfo = $site->serialize();
+		$site_uuid = $siteInfo['id'];
+
+		log()->notice('Created a new Pantheon site with UUID {uuid}', ['uuid' => $site_uuid]);
+
+		// Create a new README file to point to the Pantheon dashboard and dev site.
+		// Put in a placeholder for the CI badge to be inserted into later.
+		$ciPlaceholder = "![CI none](https://img.shields.io/badge/ci-none-orange.svg)";
+		$badgeTargetLabel = strtr($target, '-', '_');
+		$pantheonBadge = "[![Dashboard {$target}](https://img.shields.io/badge/dashboard-{$badgeTargetLabel}-yellow.svg)](https://dashboard.pantheon.io/sites/{$site_uuid}#dev/code)";
+		$siteBadge = "[![Dev Site {$target}](https://img.shields.io/badge/site-{$badgeTargetLabel}-blue.svg)](http://dev-{$target}.pantheonsite.io/)";
+		$readme = "# $target\n\n$ciPlaceholder\n$pantheonBadge\n$siteBadge";
+
+		file_put_contents("$siteDir/README.md", $readme);
+
+		// If this site cannot create multidev environments, then configure
+		// it to always run tests on the dev environment.
+		$state['has-multidev-capability'] = siteHasMultidevCapability($site);
+	}
 }

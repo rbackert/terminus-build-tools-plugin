@@ -16,5 +16,7 @@ interface SiteProvider extends ProviderInterface
     // TODO: This should probably be part of the ProviderInterface too.
     public function getEnvironment();
 
-    public function setMachineToken($token);
+	public function setMachineToken($token);
+	
+	public function createSite( array $state, array $options );
 }

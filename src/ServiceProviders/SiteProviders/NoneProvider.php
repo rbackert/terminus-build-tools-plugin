@@ -3,6 +3,10 @@
 namespace Pantheon\TerminusBuildTools\ServiceProviders\SiteProviders;
 
 class NoneProvider implements SiteProvider {
+	protected $siteEnvironment;
+    protected $machineToken;
+	protected $session;
+	
 	public function getServiceName() {
 		return 'none';
 	}
@@ -45,5 +49,9 @@ class NoneProvider implements SiteProvider {
 	public function setSession( $session ) {
 		$this->session = $session;
 		return $this;
+	}
+
+	public function createSite( array $state, array $options ) {
+		log()->notice('No site will be created');
 	}
 }

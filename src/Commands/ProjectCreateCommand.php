@@ -314,30 +314,7 @@ class ProjectCreateCommand extends BuildToolsBase
             ->addCode(
                 function ($state) use ($site_name, $label, $team, $target, $siteDir, $region) {
                     // Look up our upstream.
-                    $upstream = $this->autodetectUpstream($siteDir);
-
-                    $this->log()->notice('About to create Pantheon site {site} in {team} with upstream {upstream}', ['site' => $site_name, 'team' => $team, 'upstream' => $upstream]);
-
-                    $site = $this->siteCreate($site_name, $label, $upstream, ['org' => $team, 'region' => $region]);
-
-                    $siteInfo = $site->serialize();
-                    $site_uuid = $siteInfo['id'];
-
-                    $this->log()->notice('Created a new Pantheon site with UUID {uuid}', ['uuid' => $site_uuid]);
-
-                    // Create a new README file to point to the Pantheon dashboard and dev site.
-                    // Put in a placeholder for the CI badge to be inserted into later.
-                    $ciPlaceholder = "![CI none](https://img.shields.io/badge/ci-none-orange.svg)";
-                    $badgeTargetLabel = strtr($target, '-', '_');
-                    $pantheonBadge = "[![Dashboard {$target}](https://img.shields.io/badge/dashboard-{$badgeTargetLabel}-yellow.svg)](https://dashboard.pantheon.io/sites/{$site_uuid}#dev/code)";
-                    $siteBadge = "[![Dev Site {$target}](https://img.shields.io/badge/site-{$badgeTargetLabel}-blue.svg)](http://dev-{$target}.pantheonsite.io/)";
-                    $readme = "# $target\n\n$ciPlaceholder\n$pantheonBadge\n$siteBadge";
-
-                    file_put_contents("$siteDir/README.md", $readme);
-
-                    // If this site cannot create multidev environments, then configure
-                    // it to always run tests on the dev environment.
-                    $state['has-multidev-capability'] = $this->siteHasMultidevCapability($site);
+					$this->site_provider->createSite( $state, compact( 'site_name', 'label', 'team', 'target', 'siteDir', 'region' ) );
                 })
 
             // TODO: rollback Pantheon site create
