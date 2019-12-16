@@ -51,7 +51,7 @@ class NoneProvider implements SiteProvider {
 		return $this;
 	}
 
-	public function createSite( array $state, array $options ) {
+	public function createSite( $state, $options ) {
 		log()->notice('No site will be created');
 	}
 }

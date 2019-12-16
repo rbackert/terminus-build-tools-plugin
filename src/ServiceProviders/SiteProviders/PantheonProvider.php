@@ -212,19 +212,19 @@ class PantheonProvider implements SiteProvider, CredentialClientInterface, Publi
         $this->session()->getUser()->getSSHKeys()->addKey($publicKey);
 	}
 	
-	public function createSite( array $state, array $options ) {
+	public function createSite( $state, $options ) {
 		extract( $options );
 		// Look up our upstream.
-		$upstream = autodetectUpstream($siteDir);
+		$upstream = $this->autodetectUpstream($siteDir);
 
-		log()->notice('About to create Pantheon site {site} in {team} with upstream {upstream}', ['site' => $site_name, 'team' => $team, 'upstream' => $upstream]);
+		$this->log()->notice('About to create Pantheon site {site} in {team} with upstream {upstream}', ['site' => $site_name, 'team' => $team, 'upstream' => $upstream]);
 
-		$site = siteCreate($site_name, $label, $upstream, ['org' => $team, 'region' => $region]);
+		$site = $this->siteCreate($site_name, $label, $upstream, ['org' => $team, 'region' => $region]);
 
 		$siteInfo = $site->serialize();
 		$site_uuid = $siteInfo['id'];
 
-		log()->notice('Created a new Pantheon site with UUID {uuid}', ['uuid' => $site_uuid]);
+		$this->log()->notice('Created a new Pantheon site with UUID {uuid}', ['uuid' => $site_uuid]);
 
 		// Create a new README file to point to the Pantheon dashboard and dev site.
 		// Put in a placeholder for the CI badge to be inserted into later.
@@ -238,6 +238,6 @@ class PantheonProvider implements SiteProvider, CredentialClientInterface, Publi
 
 		// If this site cannot create multidev environments, then configure
 		// it to always run tests on the dev environment.
-		$state['has-multidev-capability'] = siteHasMultidevCapability($site);
+		$state['has-multidev-capability'] = $this->siteHasMultidevCapability($site);
 	}
 }

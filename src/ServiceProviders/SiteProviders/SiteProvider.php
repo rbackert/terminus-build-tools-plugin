@@ -18,5 +18,5 @@ interface SiteProvider extends ProviderInterface
 
 	public function setMachineToken($token);
 	
-	public function createSite( array $state, array $options );
+	public function createSite( $state, $options );
 }

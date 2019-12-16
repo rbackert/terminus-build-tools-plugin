@@ -313,7 +313,6 @@ class ProjectCreateCommand extends BuildToolsBase
             ->progressMessage('Create Pantheon site {site}', ['site' => $site_name])
             ->addCode(
                 function ($state) use ($site_name, $label, $team, $target, $siteDir, $region) {
-                    // Look up our upstream.
 					$this->site_provider->createSite( $state, compact( 'site_name', 'label', 'team', 'target', 'siteDir', 'region' ) );
                 })
 
